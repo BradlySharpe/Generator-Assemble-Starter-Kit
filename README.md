@@ -1,4 +1,4 @@
-# generator-assemble-starter-kit [![Build Status](https://secure.travis-ci.org/brad7928/generator-assemble-starter-kit.png?branch=master)](https://travis-ci.org/brad7928/generator-assemble-starter-kit)
+# generator-assemble-starter-kit
 
 > [Yeoman](http://yeoman.io) generator
 
