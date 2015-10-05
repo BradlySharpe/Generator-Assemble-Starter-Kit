@@ -12,8 +12,13 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    <% if (boneless) { %>"Boneless": "boneless.scss#~1.0.0",
-    "normalize.css": "~3.0.2",<% } %>
-    <% if (jquery) { %>"jquery": "~2.1.4",<% } %>
+  <% if (boneless) { %>
+    "Boneless": "boneless.scss#~1.0.0",
+    "normalize.css": "~3.0.2"
+    <% if (jquery) { %>,<% } %>
+  <% } %>
+  <% if (jquery) { %>
+    "jquery": "~2.1.4"
+  <% } %>
   }
 }
