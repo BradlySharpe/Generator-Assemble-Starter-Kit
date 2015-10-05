@@ -19,11 +19,13 @@
       var prompts = [
         {
           name: 'project',
-          message: 'Project Name'
+          message: 'Project Name',
+          default: 'test'
         },
         {
           name: 'site-domain',
           message: 'Domain Name',
+          default: 'test.com',
           //default: 'test' + (Math.floor(Math.random() * 100) + 1) + '.com.au'
         },
         {
@@ -63,8 +65,6 @@
           ]
         }
       ];
-
-      console.log(this.fs);
 
       this.prompt(prompts, function (props) {
 
@@ -143,35 +143,30 @@
       },
 
       copyTemplates: function() {
-        this.fs.copyTpl(
-          this.templatePath('_package.json'),
-          this.destinationPath('package.json'),
-          {
-            projectName: this.projectName,
-            title: this.site.title,
-            domain: this.site.domain,
-            protocol: this.site.protocol,
-            author: this.site.author,
-            email: this.site.email
+        var self = this,
+          files = ['_package.json', '_Gruntfile.js', '_bower.json'];
+
+        files.forEach(function(filename) {
+          if (!self.fs.exists(self.templatePath(filename))) {
+            self.log.error("File doesn't exists: " + self.templatePath(filename));
           }
-        );
-        this.fs.copyTpl(
-          this.templatePath('_Gruntfile.js'),
-          this.destinationPath('Gruntfile.js'),
-          {
-            source: this.site.source,
-            destination: this.site.destination
-          }
-        );
-        this.fs.copyTpl(
-          this.templatePath('bower.json'),
-          this.destinationPath('bower.json'),
-          {
-            projectName: this.projectName,
-            boneless: this.site.features.boneless,
-            jquery: this.site.features.jquery
-          }
-        );
+          self.fs.copyTpl(
+            self.templatePath(filename),
+            self.destinationPath(filename.substring(1)),
+            {
+              projectName: self.projectName,
+              title: self.site.title,
+              domain: self.site.domain,
+              protocol: self.site.protocol,
+              author: self.site.author,
+              email: self.site.email,
+              source: self.site.source,
+              destination: self.site.destination,
+              boneless: self.site.features.boneless,
+              jquery: self.site.features.jquery
+            }
+          );
+        });
       },
 
       copyFiles: function() {
@@ -188,15 +183,41 @@
           {
             path: 'grunt/tasks/',
             files: ['default']
+          },
+          {
+            path: 'src/config/helpers/',
+            files: ['helpers']
+          },
+          {
+            path: 'src/config/layouts/',
+            files: ['page'],
+            ext: '.hbs'
+          },
+          {
+            path: 'src/config/partials/',
+            files: ['site-footer', 'site-header'],
+            ext: '.hbs'
+          },
+          {
+            path: 'src/config/sass/',
+            files: ['_slider', '_settings'],
+            ext: '.scss'
+          },
+          {
+            path: 'src/config/scripts/',
+            files: ['helpers']
           }
         ];
 
         if (this.site.features.boneless) {
-          var bonelessFiles = ['_settings.scss', 'base.scss'];
+          var bonelessFiles = ['base.scss'];
           bonelessFiles.forEach(function(file) {
+            if (!self.fs.exists(self.templatePath(file))) {
+              self.log.error("File doesn't exists: " + self.templatePath('src/config/sass/' + file));
+            }
             self.fs.copy(
-              self.templatePath(file),
-              self.destinationPath('/' + self.site.source + '/config/sass/' + file)
+              self.templatePath('src/config/sass/' + file),
+              self.destinationPath(self.site.source + '/config/sass/' + file)
             );
           });
         }
@@ -204,6 +225,9 @@
         config.forEach(function(conf) {
           conf.files.forEach(function(file) {
             var filename = (conf.hasOwnProperty('path') ? conf.path : '') + file + (conf.hasOwnProperty('ext') ? conf.ext : '.js');
+            if (!self.fs.exists(self.templatePath(filename))) {
+              self.log.error("File doesn't exists: " + self.templatePath(filename));
+            }
             self.fs.copy(
               self.templatePath(filename),
               self.destinationPath(filename)
