@@ -32,7 +32,7 @@ npm install -g generator-assemble-starter-kit
 Finally, initiate the generator:
 
 ```bash
-yo Assemble-Starter-Kit
+yo assemble-starter-kit
 ```
 
 ### Getting To Know Yeoman
