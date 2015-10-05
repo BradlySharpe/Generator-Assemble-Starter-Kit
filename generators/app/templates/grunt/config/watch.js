@@ -6,23 +6,15 @@ module.exports = {
   },
   dev: {
     files: [
-      './*.{js,json}', './grunt/**/*.js', '<%= config.src %>bonnet/helpers/**/*.js'],
-    tasks: ['build']
+      './*.{js,json}', './grunt/**/*.js', '<%= config.src %>config/helpers/**/*.js'],
+    tasks: ['default']
   },
   html: {
     files: ['<%= config.src %>**/*.hbs'],
-    tasks: ['assemble', 'htmlmin', 'move_pages', 'xml_sitemap']
+    tasks: ['assemble']
   },
   css: {
-    files: ['<%= config.src %>bonnet/sass/*.scss', '<%= config.src %>bonnet/sass/pages/*.scss', '<%= config.dest %>**/*.html'],
-    tasks: ['compass', 'cmq', 'uncss', 'postcss', 'csslint']
+    files: ['<%= config.src %>config/sass/*.scss', '<%= config.src %>config/sass/pages/*.scss', '<%= config.dest %>**/*.html'],
+    tasks: ['compass', 'postcss']
   },
-  javascript: {
-    files: ['<%= config.src %>bonnet/scripts/**/*.js'],
-    tasks: ['concat', 'uglify', 'jshint']
-  },
-  images: {
-    files: ['<%= config.src %>images/**/*.{png,jpg,jpeg,gif,svg}'],
-    tasks: ['newer:imagemin']
-  }
 };

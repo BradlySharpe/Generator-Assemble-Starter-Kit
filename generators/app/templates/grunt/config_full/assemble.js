@@ -5,6 +5,16 @@ module.exports = {
         name: 'post',
         sortby: 'posted',
         sortorder: 'descending'
+      },
+      {
+        name: 'shop',
+        sortby: 'title',
+        sortorder: 'ascending'
+      },
+      {
+        name: 'catering',
+        sortby: 'title',
+        sortorder: 'ascending'
       }
     ],
     helpers: '<%= config.src %>config/helpers/**/*.js',

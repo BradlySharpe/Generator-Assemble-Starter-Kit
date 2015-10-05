@@ -1,7 +1,7 @@
 module.exports = {
   dev: {
     options: {
-      sassDir: '<%= config.src %>config/sass/',
+      sassDir: '<%= config.src %>bonnet/sass/',
       cssDir: '<%= config.dest %>css/'
     }
   }

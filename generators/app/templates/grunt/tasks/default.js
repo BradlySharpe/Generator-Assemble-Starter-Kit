@@ -1,3 +1,3 @@
 module.exports = function(grunt) {
-  grunt.registerTask('default', ['clean:localDev', 'build', 'connect', 'watch']);
+  grunt.registerTask('default', 'assemble', 'compass', 'postcss');
 };
