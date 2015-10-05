@@ -5,6 +5,7 @@
   var yosay = require('yosay');
   var slug = require('slugify');
   var mkdirp = require('mkdirp');
+  var fs = require('fs');
 
   module.exports = yeoman.generators.Base.extend({
     prompting: function () {
@@ -12,7 +13,7 @@
 
       // Have Yeoman greet the user.
       this.log(yosay(
-        'Welcome to the rad ' + chalk.green('Assemble Starter Kit') + ' generator!'
+        'Welcome to the ' + chalk.green('Assemble Starter Kit') + ' generator!'
       ));
 
       var prompts = [
@@ -21,18 +22,29 @@
           message: 'Project Name'
         },
         {
+          name: 'site-domain',
+          message: 'Domain Name',
+          //default: 'test' + (Math.floor(Math.random() * 100) + 1) + '.com.au'
+        },
+        {
+          name: 'site-source',
+          message: 'Grunt Build Source Directory',
+          default: 'src'
+        },
+        {
+          name: 'site-destination',
+          message: 'Grunt Build Destination Directory',
+          default: 'dist'
+        },
+        {
           name: 'user-githubUsername',
           message: 'GitHub Username',
           default: 'brad7928'
-         {
+        },
+        {
           name: 'user-githubPassword',
           message: 'GitHub Password',
           type: 'password'
-        },
-        {
-          name: 'site-domain',
-          message: 'Domain Name' + chalk.red(' (folder will be created)'),
-          default: 'test' + (Math.floor(Math.random() * 100) + 1) + '.com.au'
         },
         {
           type: 'checkbox',
@@ -44,10 +56,6 @@
               value: 'includeBoneless',
               checked: true
             },{
-              name: 'Normalize.css',
-              value: 'includeNormalize',
-              checked: true
-            },{
               name: 'jQuery',
               value: 'includeJquery',
               checked: false
@@ -55,6 +63,8 @@
           ]
         }
       ];
+
+      console.log(this.fs);
 
       this.prompt(prompts, function (props) {
 
@@ -68,8 +78,8 @@
 
         this.site = {
           title: getValue('project'),
-          source: 'src',
-          build: 'dist',
+          source: getValue('site-source'),
+          build: getValue('site-destination'),
           domain: getValue('site-domain'),
           protocol: 'http',
           author: this.user.git.name(),
@@ -88,14 +98,20 @@
 
     writing: {
       sanityChecking: function () {
-        if (!/(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)/.test(this.site.domain)) {
-          this.log.error(chalk.red('Error: Domain is not valid, cannot create folder (Domain: "' + this.site.domain + '")'));
-          process.exit(1);
-        }
 
         if (!("" + this.projectName).trim()) {
           this.log.error(chalk.red('Error: Project Name not specified'));
+          process.exit(1);
+        }
+
+        if (!/(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)/.test(this.site.domain)) {
+          this.log.error(chalk.red('Error: Domain is not valid, cannot create folder (Domain: "' + this.site.domain + '")'));
           process.exit(2);
+        }
+
+        if (fs.existsSync(this.site.domain)) {
+          this.log.error(chalk.red('Error: Directory already exists! (' + this.site.domain + ')'));
+          process.exit(3);
         }
 
       },
@@ -140,6 +156,14 @@
           }
         );
         this.fs.copyTpl(
+          this.templatePath('_Gruntfile.js'),
+          this.destinationPath('Gruntfile.js'),
+          {
+            source: this.site.source,
+            destination: this.site.destination
+          }
+        );
+        this.fs.copyTpl(
           this.templatePath('bower.json'),
           this.destinationPath('bower.json'),
           {
@@ -159,13 +183,23 @@
           },
           {
             path: 'grunt/config/',
-            files: ['assemble', 'clean', 'cmq', 'compass', 'concat', 'concurrent', 'connect', 'csslint', 'htmllint', 'htmlmin', 'imagemin', 'jshint', 'pagespeed', 'postcss', 'sftp', 'sshexec', 'uglify', 'uncss', 'watch', 'xml_sitemap']
+            files: ['assemble', 'clean', 'compass', 'connect', 'postcss', 'watch']
           },
           {
             path: 'grunt/tasks/',
-            files: ['build', 'default', 'deploy']
+            files: ['default']
           }
         ];
+
+        if (this.site.features.boneless) {
+          var bonelessFiles = ['_settings.scss', 'base.scss'];
+          bonelessFiles.forEach(function(file) {
+            self.fs.copy(
+              self.templatePath(file),
+              self.destinationPath('/' + self.site.source + '/config/sass/' + file)
+            );
+          });
+        }
 
         config.forEach(function(conf) {
           conf.files.forEach(function(file) {
@@ -180,7 +214,6 @@
     },
 
     install: function () {
-      /*
       var self = this;
       self.installDependencies({
         npm: true,
@@ -189,7 +222,6 @@
           self.log.ok('Finished!');
         }
       });
-      */
     },
 
     end: {
