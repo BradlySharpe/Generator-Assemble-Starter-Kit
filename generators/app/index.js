@@ -136,7 +136,7 @@
           self.site.source+'/content/_pages',
           self.site.source+'/content/blog',
           self.site.source+'/images',
-          self.site.build
+          self.site.destination
         ].forEach(
           function(dir) { mkdirp(dir); }
         );
