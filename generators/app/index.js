@@ -214,18 +214,25 @@
           }
         ];
 
-        if (this.site.features.boneless) {
-          var bonelessFiles = ['base.scss'];
-          bonelessFiles.forEach(function(file) {
-            if (!self.fs.exists(self.templatePath(file))) {
-              self.log.error("File doesn't exists: " + self.templatePath('src/config/sass/' + file));
+        var bonelessFiles = [
+          {
+            filename: 'base',
+            destination: this.projectName,
+            ext: '.scss'
+          }
+        ];
+        bonelessFiles.forEach(function(file) {
+          if (!self.fs.exists(self.templatePath('src/config/sass/' + file.filename + file.ext))) {
+            self.log.error("File doesn't exists: " + self.templatePath('src/config/sass/' + file.filename + file.ext));
+          }
+          self.fs.copyTpl(
+            self.templatePath('src/config/sass/' + file.filename + file.ext),
+            self.destinationPath(self.site.source + '/config/sass/' + file.destination + file.ext),
+            {
+              boneless: this.site.features.boneless
             }
-            self.fs.copy(
-              self.templatePath('src/config/sass/' + file),
-              self.destinationPath(self.site.source + '/config/sass/' + file)
-            );
-          });
-        }
+          );
+        });
 
         config.forEach(function(conf) {
           conf.files.forEach(function(file) {
