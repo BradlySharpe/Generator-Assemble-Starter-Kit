@@ -206,6 +206,11 @@
           {
             path: 'src/config/scripts/',
             files: ['helpers']
+          },
+          {
+            path: 'src/content/_pages/',
+            files: ['index'],
+            ext: '.hbs'
           }
         ];
 
