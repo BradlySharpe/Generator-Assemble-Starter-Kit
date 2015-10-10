@@ -217,7 +217,7 @@
         var bonelessFiles = [
           {
             filename: 'base',
-            destination: this.projectName,
+            destination: self.projectName,
             ext: '.scss'
           }
         ];
@@ -227,9 +227,9 @@
           }
           self.fs.copyTpl(
             self.templatePath('src/config/sass/' + file.filename + file.ext),
-            self.destinationPath(self.site.source + '/config/sass/' + file.destination + file.ext),
+            self.destinationPath(self.site.source + '/config/sass/' + file.destination.toLowerCase() + file.ext),
             {
-              boneless: this.site.features.boneless
+              boneless: self.site.features.boneless
             }
           );
         });
