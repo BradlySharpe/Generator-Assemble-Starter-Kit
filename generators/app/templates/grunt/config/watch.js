@@ -7,7 +7,7 @@ module.exports = {
   dev: {
     files: [
       './*.{js,json}', './grunt/**/*.js', '<%= config.src %>config/helpers/**/*.js'],
-    tasks: ['default']
+    tasks: ['assemble', 'compass', 'postcss']
   },
   html: {
     files: ['<%= config.src %>**/*.hbs'],
