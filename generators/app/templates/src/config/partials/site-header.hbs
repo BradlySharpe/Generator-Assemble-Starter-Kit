@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8">
     {{#if title}}
-    <title>{{title}} - Healthy Desires</title>
+    <title>{{title}} - {{ config 'title' }}</title>
     {{else}}
-    <title>Healthy Desires</title>
+    <title>{{ config 'title' }}</title>
     {{/if}}
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,8 +23,8 @@
     <script>window.sliders = [];</script>
     <div class="container">
       <div class="row logo">
-        <a href="/" title="Healthy Desires">
-          <img src="/images/healthy-desires-logo.svg" title="Healthy Desires Logo" />
+        <a href="/" title="{{ config 'title' }}">
+          <img src="{{ config 'name' lowercase=true prefix="/images/" sufix="-logo.svg"}}" title="{{ config 'title' }} Logo" />
         </a>
       </div>
       <div class="navigation">
