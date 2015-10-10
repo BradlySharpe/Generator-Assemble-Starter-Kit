@@ -79,7 +79,7 @@
         this.site = {
           title: getValue('project'),
           source: getValue('site-source'),
-          build: getValue('site-destination'),
+          destination: getValue('site-destination'),
           domain: getValue('site-domain'),
           protocol: 'http',
           author: this.user.git.name(),
